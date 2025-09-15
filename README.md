@@ -4,7 +4,7 @@ LinguaTab turns your browser's new tab into a tiny moment of discovery. Every da
 
 ## Features
 
-- **Multi-language Support**: Learn Spanish, French, German, Italian, and Portuguese
+- **Multi-language Support**: Learn Spanish, French, German, Italian, Japanese, Ukrainian, and Portuguese
 - **Beautiful Shaders**: Multiple animated WebGL shader effects as backgrounds
 - **Daily Words**: Discover new vocabulary every day
 - **Interactive Navigation**: Use arrow keys or UI controls to browse words

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Lingua Tab — Daily Word for Your New Tab",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Learn a new word every day in your new tab — meaning, translation, and example on a calm, animated background.",
   "permissions": [
     "storage"

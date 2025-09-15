@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "LinguaTab",
+  "name": "Lingua Tab — Daily Word for Your New Tab",
   "version": "1.0.1",
-  "description": "LinguaTab turns your browser's new tab into a tiny moment of discovery. Every day, you'll see one carefully selected word from your chosen language.",
+  "description": "Learn a new word every day in your new tab — meaning, translation, and example on a calm, animated background.",
   "permissions": [
     "storage"
   ],

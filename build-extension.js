@@ -141,9 +141,10 @@ writeFileSync('dist/popup.html', popupHtml);
 console.log('Copying manifest.json...');
 copyFileSync('manifest.json', 'dist/manifest.json');
 
-// Copy popup.js to dist
-console.log('Copying popup.js...');
+// Copy popup files to dist
+console.log('Copying popup files...');
 copyFileSync('popup.js', 'dist/popup.js');
+copyFileSync('popup-analytics.js', 'dist/popup-analytics.js');
 
 // Copy dictionaries to dist
 console.log('Copying dictionaries...');
@@ -170,7 +171,7 @@ console.log('Required icons: icon-16.png, icon-32.png, icon-48.png, icon-128.png
 
 // Final verification of all files
 console.log('\n🔍 Final file verification:');
-const requiredFiles = ['index.html', 'main.js', 'manifest.json', 'popup.html', 'popup.js'];
+const requiredFiles = ['index.html', 'main.js', 'manifest.json', 'popup.html', 'popup.js', 'popup-analytics.js'];
 for (const file of requiredFiles) {
   const filePath = `dist/${file}`;
   if (existsSync(filePath)) {

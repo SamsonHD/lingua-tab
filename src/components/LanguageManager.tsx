@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { trackLanguageChange, trackExtensionInstalled } from "../utils/analytics";
 // Allow TypeScript to compile in both web and extension contexts
 // without depending on @types/chrome in the app bundle
 declare const chrome: any;
@@ -31,8 +32,8 @@ const dictionaryIndex: Array<{ code: string; name: string; flag: string; file: s
 ];
 
 export const useLanguageManager = () => {
-  const [selectedLanguage, setSelectedLanguage] = useState(() => languageData[0] as unknown as Language);
-  const [dailyWord, setDailyWord] = useState(() => (languageData[0]?.words[0] as unknown as WordEntry));
+  const [selectedLanguage, setSelectedLanguage] = useState(null as Language | null);
+  const [dailyWord, setDailyWord] = useState(null as WordEntry | null);
   const [isLoading, setIsLoading] = useState(true);
 
   // Chrome extension storage helper
@@ -76,6 +77,8 @@ export const useLanguageManager = () => {
 
   // Change language
   const changeLanguage = async (language: Language) => {
+    const previousLanguage = selectedLanguage?.name || 'unknown';
+    
     setSelectedLanguage(language);
     const newDailyWord = calculateDailyWord(language);
     setDailyWord(newDailyWord);
@@ -84,6 +87,9 @@ export const useLanguageManager = () => {
       selectedLanguage: language.code,
       dailyWordDate: new Date().toDateString()
     });
+    
+    // Track language change
+    trackLanguageChange(previousLanguage, language.name);
   };
 
   // Initialize from storage and load dictionaries
@@ -138,6 +144,11 @@ export const useLanguageManager = () => {
             dailyWordDate: today
           });
         }
+        
+        // Track installation on first use (when no previous data exists)
+        if (!data.selectedLanguage && !data.dailyWordDate) {
+          trackExtensionInstalled();
+        }
       } catch (error) {
         console.error('Error initializing data:', error);
         // Use defaults if there's an error
@@ -173,8 +184,8 @@ export const useLanguageManager = () => {
 
   return {
     languages: languageData,
-    selectedLanguage,
-    dailyWord,
+    selectedLanguage: selectedLanguage || languageData[0] || { code: 'es', name: 'Spanish', flag: '🇪🇸', words: [] },
+    dailyWord: dailyWord || { word: '', meaning: '', example: '' },
     changeLanguage,
     isLoading
   };

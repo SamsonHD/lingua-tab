@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { ShaderCanvas } from "./components/ShaderCanvas";
 import { ShaderSelector } from "./components/ShaderSelector";
 import { LanguageSelector } from "./components/LanguageSelector";
@@ -6,6 +6,10 @@ import { WordDisplay } from "./components/WordDisplay";
 import { TimeGreeting } from "./components/TimeGreeting";
 import { useLanguageManager } from "./components/LanguageManager";
 import { motion } from "motion/react";
+import { trackPageView, trackDailyWordView, trackShaderChange, trackExtensionInstalled } from "./utils/analytics";
+
+// Chrome API type declaration
+declare const chrome: any;
 
 export default function App() {
   const {
@@ -22,10 +26,14 @@ export default function App() {
   // Set dark mode and update page title
   useEffect(() => {
     document.documentElement.classList.add("dark");
-    if (dailyWord) {
-      document.title = `${dailyWord.word} - Learn A Word`;
+    if (dailyWord && selectedLanguage) {
+      document.title = `${dailyWord.word} - LinguaTab`;
+      
+      // Track page view and daily word view
+      trackPageView(document.title, document.location.href);
+      trackDailyWordView(selectedLanguage.name, dailyWord.word);
     }
-  }, [dailyWord]);
+  }, [dailyWord, selectedLanguage]);
 
   // Adjust canvas size based on window size
   useEffect(() => {
@@ -50,6 +58,9 @@ export default function App() {
     } else {
       localStorage.setItem("selectedShader", id.toString());
     }
+    
+    // Track shader change
+    trackShaderChange(id);
   };
 
   // Load shader preference from storage

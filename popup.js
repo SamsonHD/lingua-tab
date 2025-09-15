@@ -1,7 +1,7 @@
 // Popup script for Chrome extension settings
 document.addEventListener('DOMContentLoaded', async function() {
   const languageSelect = document.getElementById('language');
-  let currentLanguage = 'es'; // Default
+  let currentLanguage = 'pt'; // Default
   
   // Track popup opened
   await trackPopupOpened();

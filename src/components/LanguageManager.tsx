@@ -22,13 +22,13 @@ export interface Language {
 const languageData: Language[] = [];
 
 const dictionaryIndex: Array<{ code: string; name: string; flag: string; file: string }> = [
+  { code: "pt", name: "Portuguese", flag: "🇵🇹", file: "portuguese.json" },
+  { code: "uk", name: "Ukrainian", flag: "🇺🇦", file: "ukrainian.json" },
   { code: "es", name: "Spanish", flag: "🇪🇸", file: "spanish.json" },
   { code: "fr", name: "French", flag: "🇫🇷", file: "french.json" },
   { code: "de", name: "German", flag: "🇩🇪", file: "german.json" },
   { code: "it", name: "Italian", flag: "🇮🇹", file: "italian.json" },
-  { code: "ja", name: "Japanese", flag: "🇯🇵", file: "japanese.json" },
-  { code: "pt", name: "Portuguese", flag: "🇵🇹", file: "portuguese.json" },
-  { code: "uk", name: "Ukrainian", flag: "🇺🇦", file: "ukrainian.json" }
+  { code: "ja", name: "Japanese", flag: "🇯🇵", file: "japanese.json" }
 ];
 
 export const useLanguageManager = () => {
@@ -184,7 +184,7 @@ export const useLanguageManager = () => {
 
   return {
     languages: languageData,
-    selectedLanguage: selectedLanguage || languageData[0] || { code: 'es', name: 'Spanish', flag: '🇪🇸', words: [] },
+    selectedLanguage: selectedLanguage || languageData[0] || { code: 'pt', name: 'Portuguese', flag: '🇵🇹', words: [] },
     dailyWord: dailyWord || { word: '', meaning: '', example: '' },
     changeLanguage,
     isLoading

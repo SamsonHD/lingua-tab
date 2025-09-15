@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            width: 300px;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin: 0;
+        }
+        h2 {
+            margin: 0 0 15px 0;
+            font-size: 18px;
+            text-align: center;
+        }
+        .setting {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            border: none;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+        }
+        .info {
+            text-align: center;
+            font-size: 12px;
+            opacity: 0.8;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h2>🌍 Learn A Word</h2>
+    
+    <div class="setting">
+        <label for="language">Choose your language:</label>
+        <select id="language">
+            <option value="es">🇪🇸 Spanish</option>
+            <option value="fr">🇫🇷 French</option>
+            <option value="de">🇩🇪 German</option>
+            <option value="it">🇮🇹 Italian</option>
+            <option value="pt">🇵🇹 Portuguese</option>
+        </select>
+    </div>
+    
+    <div class="info">
+        Open a new tab to see your daily word!
+    </div>
+    
+    <script type="module" src="popup.js"></script>
+</body>
+</html>

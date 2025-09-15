@@ -1,0 +1,17 @@
+{
+  "language": "German",
+  "languageCode": "de",
+  "flag": "🇩🇪",
+  "words": [
+    { "word": "Gemütlichkeit", "meaning": "A feeling of warmth, coziness, and belonging", "example": "Die Gemütlichkeit dieses Cafés macht mich glücklich." },
+    { "word": "Fernweh", "meaning": "The ache for distant places; the desire to travel", "example": "Das Fernweh treibt mich dazu, neue Länder zu erkunden." },
+    { "word": "Schadenfreude", "meaning": "Pleasure derived from someone else's misfortune", "example": "Schadenfreude ist keine schöne Eigenschaft." },
+    { "word": "Zeitgeist", "meaning": "The spirit or mood of a particular period of history", "example": "Dieser Künstler fängt den Zeitgeist perfekt ein." },
+    { "word": "Weltschmerz", "meaning": "World-weariness; mental depression from the world's state", "example": "Der Weltschmerz überkam ihn beim Lesen der Nachrichten." },
+    { "word": "Wanderlust", "meaning": "A strong desire to travel and explore the world", "example": "Ihre Wanderlust führte sie auf alle Kontinente." },
+    { "word": "Verschlimmbessern", "meaning": "To make something worse while trying to improve it", "example": "Ich habe versucht zu helfen, aber nur verschlimmbessert." },
+    { "word": "Torschlusspanik", "meaning": "The fear of diminishing opportunities as one ages", "example": "Mit vierzig bekam er Torschlusspanik bezüglich Karriere." }
+  ]
+}
+
+

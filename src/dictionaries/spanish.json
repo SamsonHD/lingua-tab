@@ -1,0 +1,17 @@
+{
+  "language": "Spanish",
+  "languageCode": "es",
+  "flag": "🇪🇸",
+  "words": [
+    { "word": "Serendipidad", "meaning": "The pleasant surprise of finding something good while looking for something else", "example": "Encontrar este café fue pura serendipidad." },
+    { "word": "Saudade", "meaning": "A deep emotional state of longing for something absent", "example": "Siento saudade por los días de mi infancia." },
+    { "word": "Sobremesa", "meaning": "The time spent lingering at the table after a meal", "example": "La sobremesa con la familia es sagrada los domingos." },
+    { "word": "Madrugada", "meaning": "The time between midnight and dawn", "example": "Me gusta caminar en la madrugada cuando todo está silencioso." },
+    { "word": "Estrenar", "meaning": "To use or wear something for the first time", "example": "Voy a estrenar mis zapatos nuevos en la fiesta." },
+    { "word": "Tutear", "meaning": "To address someone using the informal 'tú' instead of 'usted'", "example": "¿Te puedo tutear o prefieres que use 'usted'?" },
+    { "word": "Trasnochar", "meaning": "To stay up very late or all night", "example": "Tuve que trasnochar para terminar el proyecto." },
+    { "word": "Antojarse", "meaning": "To have a sudden craving or desire for something", "example": "Se me antoja un helado de chocolate." }
+  ]
+}
+
+

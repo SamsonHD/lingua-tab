@@ -1,0 +1,17 @@
+{
+  "language": "Japanese",
+  "languageCode": "ja",
+  "flag": "🇯🇵",
+  "words": [
+    { "word": "Ikigai", "meaning": "A reason for being; the intersection of what you love and what the world needs", "example": "Teaching children has become my ikigai." },
+    { "word": "Mono no aware", "meaning": "The bittersweet awareness of the impermanence of all things", "example": "Watching the cherry blossoms fall filled me with mono no aware." },
+    { "word": "Wabi-sabi", "meaning": "Finding beauty in imperfection and impermanence", "example": "The cracked tea bowl embodied the spirit of wabi-sabi." },
+    { "word": "Tsundoku", "meaning": "The act of acquiring books and letting them pile up unread", "example": "My tsundoku habit has filled my apartment with unread books." },
+    { "word": "Komorebi", "meaning": "Sunlight filtering through tree leaves", "example": "I love sitting in the komorebi during my morning walks." },
+    { "word": "Shinrin-yoku", "meaning": "Forest bathing; immersing oneself peacefully in nature", "example": "Shinrin-yoku helps me find inner peace and clarity." },
+    { "word": "Kaizen", "meaning": "Continuous improvement through small, incremental changes", "example": "We practice kaizen in our daily work routines." },
+    { "word": "Omotenashi", "meaning": "Wholehearted service without expectation of reward", "example": "The hotel staff's omotenashi made our stay unforgettable." }
+  ]
+}
+
+

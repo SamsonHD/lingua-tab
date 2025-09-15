@@ -1,0 +1,15 @@
+{
+  "language": "Ukrainian",
+  "languageCode": "uk",
+  "flag": "🇺🇦",
+  "words": [
+    { "word": "Світанок", "meaning": "Dawn, the first light of day", "example": "Світанок приніс надію на новий день." },
+    { "word": "Мрія", "meaning": "Dream, aspiration, or cherished hope", "example": "Моя мрія - подорожувати світом." },
+    { "word": "Затишок", "meaning": "Coziness, comfort, a feeling of warmth and security", "example": "У бабусиному домі завжди панував затишок." },
+    { "word": "Веселка", "meaning": "Rainbow", "example": "Після дощу на небі з'явилася яскрава веселка." },
+    { "word": "Доля", "meaning": "Fate, destiny, one's lot in life", "example": "Кожен сам творить свою долю." },
+    { "word": "Журба", "meaning": "Melancholy, deep sadness or longing", "example": "Осіння журба огортала її серце." },
+    { "word": "Надія", "meaning": "Hope, expectation of something good", "example": "Надія - це те, що тримає нас живими." },
+    { "word": "Спогад", "meaning": "Memory, recollection of the past", "example": "Дитячі спогади найдорожчі для серця." }
+  ]
+}

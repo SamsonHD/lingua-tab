@@ -26,7 +26,8 @@ const dictionaryIndex: Array<{ code: string; name: string; flag: string; file: s
   { code: "de", name: "German", flag: "🇩🇪", file: "german.json" },
   { code: "it", name: "Italian", flag: "🇮🇹", file: "italian.json" },
   { code: "ja", name: "Japanese", flag: "🇯🇵", file: "japanese.json" },
-  { code: "pt", name: "Portuguese", flag: "🇵🇹", file: "portuguese.json" }
+  { code: "pt", name: "Portuguese", flag: "🇵🇹", file: "portuguese.json" },
+  { code: "uk", name: "Ukrainian", flag: "🇺🇦", file: "ukrainian.json" }
 ];
 
 export const useLanguageManager = () => {

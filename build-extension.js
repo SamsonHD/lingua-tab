@@ -114,16 +114,18 @@ const popupHtml = `<!DOCTYPE html>
     </style>
 </head>
 <body>
-    <h2>🌍 LinguaTab</h2>
+    <h2>Lingua Tab</h2>
     
     <div class="setting">
         <label for="language">Choose your language:</label>
         <select id="language">
+            <option value="pt">🇵🇹 Portuguese</option>
+            <option value="uk">🇺🇦 Ukrainian</option>
             <option value="es">🇪🇸 Spanish</option>
             <option value="fr">🇫🇷 French</option>
             <option value="de">🇩🇪 German</option>
             <option value="it">🇮🇹 Italian</option>
-            <option value="pt">🇵🇹 Portuguese</option>
+            <option value="ja">🇯🇵 Japanese</option>
         </select>
     </div>
     
@@ -131,6 +133,7 @@ const popupHtml = `<!DOCTYPE html>
         Open a new tab to see your daily word!
     </div>
     
+    <script src="./popup-analytics.js"></script>
     <script src="./popup.js"></script>
 </body>
 </html>`;

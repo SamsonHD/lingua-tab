@@ -177,7 +177,7 @@ export async function trackDailyWordView(language: string, word: string): Promis
  */
 export async function trackExtensionInstalled(): Promise<void> {
   await sendAnalyticsEvent('extension_installed', {
-    version: '1.0.2'
+    version: '1.0.3'
   });
 }
 

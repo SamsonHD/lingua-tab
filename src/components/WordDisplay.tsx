@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { motion } from "motion/react";
 import { WordEntry } from "./LanguageManager";
 import { speakWord } from "../utils/tts";
@@ -8,6 +8,7 @@ interface WordDisplayProps {
   size: number;
   selectedLanguage: string;
   isDailyWord?: boolean;
+  onWordClick?: (speakFunction: () => Promise<void>) => void;
 }
 
 export const WordDisplay = ({
@@ -15,6 +16,7 @@ export const WordDisplay = ({
   size,
   selectedLanguage,
   isDailyWord = false,
+  onWordClick,
 }: WordDisplayProps) => {
   const containerSize = size * 0.6; // 60% of canvas size
   const maxWordLength = 60;
@@ -48,6 +50,13 @@ export const WordDisplay = ({
       console.warn('Speech synthesis failed:', e);
     }
   };
+
+  // Provide the handleSpeak function to parent component
+  useEffect(() => {
+    if (onWordClick) {
+      onWordClick(handleSpeak);
+    }
+  }, [selectedLanguage, word.word, onWordClick]); // Re-run when language or word changes
 
   return (
     <div

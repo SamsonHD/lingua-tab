@@ -22,6 +22,7 @@ export default function App() {
 
   const [canvasSize, setCanvasSize] = useState(600);
   const [selectedShader, setSelectedShader] = useState(1);
+  const [speakFunction, setSpeakFunction] = useState(null);
 
   // Set dark mode and update page title
   useEffect(() => {
@@ -61,6 +62,18 @@ export default function App() {
     
     // Track shader change
     trackShaderChange(id);
+  };
+
+  // Handle central area click to play word
+  const handleCentralClick = async () => {
+    if (speakFunction) {
+      await speakFunction();
+    }
+  };
+
+  // Handle word click callback from WordDisplay
+  const handleWordClick = (speakFn: () => Promise<void>) => {
+    setSpeakFunction(() => speakFn);
   };
 
   // Load shader preference from storage
@@ -114,8 +127,6 @@ export default function App() {
       <ShaderSelector
         selectedShader={selectedShader}
         onSelectShader={handleSelectShader}
-        currentWord={dailyWord}
-        currentLanguage={selectedLanguage?.name}
       />
 
       {/* Main layout container with shader */}
@@ -125,7 +136,9 @@ export default function App() {
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative"
+          className="relative cursor-pointer"
+          onClick={handleCentralClick}
+          title="Click to hear pronunciation"
         >
           <ShaderCanvas
             size={canvasSize}
@@ -138,6 +151,7 @@ export default function App() {
             size={canvasSize}
             selectedLanguage={selectedLanguage.name}
             isDailyWord={true}
+            onWordClick={handleWordClick}
           />
         </motion.div>
 

@@ -114,6 +114,8 @@ export default function App() {
       <ShaderSelector
         selectedShader={selectedShader}
         onSelectShader={handleSelectShader}
+        currentWord={dailyWord}
+        currentLanguage={selectedLanguage?.name}
       />
 
       {/* Main layout container with shader */}

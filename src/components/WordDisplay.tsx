@@ -26,34 +26,34 @@ export const WordDisplay = ({
     return text.substring(0, maxLength) + "...";
   };
 
-  const handleSpeak = async () => {
-    // Map display name to language code for Web Speech API
-    const languageMap: Record<string, any> = {
-      Spanish: 'es',
-      French: 'fr',
-      German: 'de',
-      Italian: 'it',
-      Japanese: 'ja',
-      Portuguese: 'pt',
-      Ukrainian: 'uk',
-    };
-    const code = languageMap[selectedLanguage] || 'en';
-    
-    // Extract only the first word (before any transliteration or additional info)
-    // This handles cases like "こんにちは (konnichiwa)" or "привіт (privit)"
-    const firstWord = word.word.split(/[\s(]/)[0].trim();
-    
-    try {
-      await speakWord(firstWord, code as any, { rate: 0.8 });
-    } catch (e) {
-      // Silent fail to avoid interfering with UX
-      console.warn('Speech synthesis failed:', e);
-    }
-  };
-
-  // Provide the handleSpeak function to parent component
+  // Create and provide the handleSpeak function to parent component
   useEffect(() => {
     if (onWordClick) {
+      const handleSpeak = async () => {
+        // Map display name to language code for Web Speech API
+        const languageMap: Record<string, any> = {
+          Spanish: 'es',
+          French: 'fr',
+          German: 'de',
+          Italian: 'it',
+          Japanese: 'ja',
+          Portuguese: 'pt',
+          Ukrainian: 'uk',
+        };
+        const code = languageMap[selectedLanguage] || 'en';
+        
+        // Extract only the first word (before any transliteration or additional info)
+        // This handles cases like "こんにちは (konnichiwa)" or "привіт (privit)"
+        const firstWord = word.word.split(/[\s(]/)[0].trim();
+        
+        try {
+          await speakWord(firstWord, code as any, { rate: 0.8 });
+        } catch (e) {
+          // Silent fail to avoid interfering with UX
+          console.warn('Speech synthesis failed:', e);
+        }
+      };
+      
       onWordClick(handleSpeak);
     }
   }, [selectedLanguage, word.word, onWordClick]); // Re-run when language or word changes
@@ -138,23 +138,6 @@ export const WordDisplay = ({
         </motion.p>
 
 
-        {/* Speaker Button - Bottom of Circle */}
-        <motion.button
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          onClick={handleSpeak}
-          aria-label="Play pronunciation"
-          className="absolute -bottom-14 left-1/2 transform -translate-x-1/2 inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white transition-colors"
-        >
-          {/* simple speaker glyph */}
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M3 10v4h4l5 5V5L7 10H3z" fill="currentColor"/>
-            <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.06A4.495 4.495 0 0016.5 12z" fill="currentColor"/>
-            <path d="M14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" fill="currentColor"/>
-          </svg>
-        </motion.button>
-
         {/* Language Badge */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -168,6 +151,21 @@ export const WordDisplay = ({
             </span>
           </div>
         </motion.div>
+      </motion.div>
+
+      {/* Speaker Icon - Visual hint that circle is clickable for audio */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className="absolute bottom-4 left-1/2 transform -translate-x-1/2 inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/10 border border-white/20 text-white pointer-events-none z-10"
+      >
+        {/* simple speaker glyph as visual hint */}
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 10v4h4l5 5V5L7 10H3z" fill="currentColor"/>
+          <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.06A4.495 4.495 0 0016.5 12z" fill="currentColor"/>
+          <path d="M14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" fill="currentColor"/>
+        </svg>
       </motion.div>
     </div>
   );

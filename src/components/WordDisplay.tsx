@@ -92,38 +92,20 @@ export const WordDisplay = ({
           </motion.div>
         )}
 
-        {/* Main Word + Speak button */}
-        <div className="flex items-center gap-3 mb-4">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-white break-words"
-            style={{
-              fontSize: word.word.length > 15 ? "2.5rem" : "3rem",
-              lineHeight: 1.2,
-              fontFamily: "var(--font-heading)",
-            }}
-          >
-            {truncateText(word.word, 20)}
-          </motion.h1>
-
-          <motion.button
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            onClick={handleSpeak}
-            aria-label="Play pronunciation"
-            className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white"
-          >
-            {/* simple speaker glyph */}
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M3 10v4h4l5 5V5L7 10H3z" fill="currentColor"/>
-              <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.06A4.495 4.495 0 0016.5 12z" fill="currentColor"/>
-              <path d="M14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" fill="currentColor"/>
-            </svg>
-          </motion.button>
-        </div>
+        {/* Main Word */}
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="text-white mb-4 break-words text-center"
+          style={{
+            fontSize: word.word.length > 15 ? "2.5rem" : "3rem",
+            lineHeight: 1.2,
+            fontFamily: "var(--font-heading)",
+          }}
+        >
+          {truncateText(word.word, 20)}
+        </motion.h1>
 
         {/* Meaning */}
         <motion.p
@@ -155,6 +137,23 @@ export const WordDisplay = ({
           "{truncateText(word.example, maxWordLength)}"
         </motion.p>
 
+
+        {/* Speaker Button - Bottom of Circle */}
+        <motion.button
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          onClick={handleSpeak}
+          aria-label="Play pronunciation"
+          className="absolute -bottom-14 left-1/2 transform -translate-x-1/2 inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white transition-colors"
+        >
+          {/* simple speaker glyph */}
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 10v4h4l5 5V5L7 10H3z" fill="currentColor"/>
+            <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.06A4.495 4.495 0 0016.5 12z" fill="currentColor"/>
+            <path d="M14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" fill="currentColor"/>
+          </svg>
+        </motion.button>
 
         {/* Language Badge */}
         <motion.div

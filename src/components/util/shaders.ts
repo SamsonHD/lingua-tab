@@ -23,20 +23,20 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
   float centerDim = disableCenterDimming ? 1.0 : smoothstep(radius * 0.3, radius * 0.5, dist);
 
   for(float i = 1.0; i < 10.0; i++){
-    uv.x += 0.6 / i * cos(i * 2.5 * uv.y + iTime * 0.5);
-    uv.y += 0.6 / i * cos(i * 1.5 * uv.x + iTime * 0.5);
+    uv.x += 0.6 / i * cos(i * 2.5 * uv.y + iTime * 0.3);
+    uv.y += 0.6 / i * cos(i * 1.5 * uv.x + iTime * 0.3);
   }
   
   // Determine color based on reminder state
   if (hasActiveReminders) {
     // Blue shade for active reminders
-    fragColor = vec4(vec3(0.1, 0.3, 0.6) / abs(sin(iTime * 0.5 - uv.y - uv.x)), 1.0);
+    fragColor = vec4(vec3(0.1, 0.3, 0.6) / abs(sin(iTime * 0.3 - uv.y - uv.x)), 1.0);
   } else if (hasUpcomingReminders) {
     // Green shade for upcoming reminders
-    fragColor = vec4(vec3(0.1, 0.5, 0.2) / abs(sin(iTime * 0.5 - uv.y - uv.x)), 1.0);
+    fragColor = vec4(vec3(0.1, 0.5, 0.2) / abs(sin(iTime * 0.3 - uv.y - uv.x)), 1.0);
   } else {
     // Original neutral color
-    fragColor = vec4(vec3(0.1) / abs(sin(iTime * 0.5 - uv.y - uv.x)), 1.0);
+    fragColor = vec4(vec3(0.1) / abs(sin(iTime * 0.3 - uv.y - uv.x)), 1.0);
   }
   
   // Apply center dimming only if not disabled
@@ -79,7 +79,7 @@ varying vec2 vTextureCoord;
 // https://www.shadertoy.com/view/MsjSW3
 // License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License
 
-#define t (iTime * 0.5)
+#define t (iTime * 0.3)
 mat2 m(float a){float c=cos(a), s=sin(a);return mat2(c,-s,s,c);}
 float map(vec3 p, bool isActive, bool isUpcoming){
     p.xz*= m(t*0.4);p.xy*= m(t*0.3);
@@ -213,7 +213,7 @@ void mainImage(out vec4 O, in vec2 fragCoord) {
     mat2 R2 = mat2(c2, -s2, s2, c2);
     
     // Calculate position
-    vec2 coord = fragCoord / iResolution.y * fi * 0.1 + iTime * 0.5 * b;
+    vec2 coord = fragCoord / iResolution.y * fi * 0.1 + iTime * 0.3 * b;
     vec2 frac_coord = fract(coord * R2) - 0.5;
     p = R * frac_coord;
     vec2 clamped_p = clamp(p, -b, b);
@@ -305,7 +305,7 @@ float lines(vec2 uv, float thickness, float distortion) {
     float y = uv.y;
     
     // Apply distortion based on fbm noise
-    float distortionAmount = distortion * fbm(vec2(uv.x * 2.0, y * 0.5 + iTime * 0.05));
+    float distortionAmount = distortion * fbm(vec2(uv.x * 2.0, y * 0.5 + iTime * 0.03));
     y += distortionAmount;
     
     // Create lines with smooth step
@@ -340,7 +340,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
     float line = lines(uv, thickness, distortion);
     
     // Add subtle movement over time
-    float timeOffset = sin(iTime * 0.1) * 0.1;
+    float timeOffset = sin(iTime * 0.06) * 0.1;
     float animatedLine = lines(uv + vec2(timeOffset, 0.0), thickness, distortion);
     
     // Blend between static and animated lines
@@ -407,6 +407,42 @@ void main() {
 }
 `;
 
+// Accessibility shader: Simple black circle with white stroke
+export const accessibilityShader = `
+precision mediump float;
+uniform vec2 iResolution;
+uniform float iTime;
+uniform vec2 iMouse;
+uniform bool hasActiveReminders;
+uniform bool hasUpcomingReminders;
+uniform bool disableCenterDimming;
+varying vec2 vTextureCoord;
+
+void mainImage(out vec4 fragColor, in vec2 fragCoord) {
+  vec2 center = iResolution.xy * 0.5;
+  float dist = distance(fragCoord, center);
+  float radius = min(iResolution.x, iResolution.y) * 0.4;
+  
+  // Create circle with stroke
+  float strokeWidth = 3.0;
+  float circle = smoothstep(radius - strokeWidth, radius, dist) - smoothstep(radius, radius + strokeWidth, dist);
+  
+  // Black background with white stroke
+  vec3 backgroundColor = vec3(0.0, 0.0, 0.0); // Pure black
+  vec3 strokeColor = vec3(1.0, 1.0, 1.0); // Pure white
+  
+  // Mix colors based on circle mask
+  vec3 finalColor = mix(backgroundColor, strokeColor, circle);
+  
+  fragColor = vec4(finalColor, 1.0);
+}
+
+void main() {
+  vec2 fragCoord = vTextureCoord * iResolution;
+  mainImage(gl_FragColor, fragCoord);
+}
+`;
+
 // Common vertex shader for all shaders
 export const vertexShader = `
 attribute vec4 aVertexPosition;
@@ -443,5 +479,11 @@ export const shaders = [
     name: "Wavy Lines",
     fragmentShader: wavyLinesShader,
     color: "#10b981" // Emerald color
+  },
+  {
+    id: 5,
+    name: "Accessibility",
+    fragmentShader: accessibilityShader,
+    color: "#ffffff" // White color (for the stroke)
   }
 ];

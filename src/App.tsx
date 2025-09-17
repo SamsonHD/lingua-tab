@@ -23,6 +23,9 @@ export default function App() {
   const [canvasSize, setCanvasSize] = useState(600);
   const [selectedShader, setSelectedShader] = useState(1);
   const [speakFunction, setSpeakFunction] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [clickCount, setClickCount] = useState(0);
+  const [lastResetTime, setLastResetTime] = useState(Date.now());
 
   // Set dark mode and update page title
   useEffect(() => {
@@ -64,10 +67,38 @@ export default function App() {
     trackShaderChange(id);
   };
 
-  // Handle central area click to play word
+  // Handle central area click to play word with rate limiting
   const handleCentralClick = async () => {
-    if (speakFunction) {
+    if (!speakFunction) return;
+
+    const now = Date.now();
+    const timeSinceLastReset = now - lastResetTime;
+    
+    // Reset click count every 10 seconds
+    if (timeSinceLastReset > 10000) {
+      setClickCount(0);
+      setLastResetTime(now);
+    }
+    
+    // Limit to 5 clicks per 10 seconds
+    if (clickCount >= 5) {
+      console.log('Rate limit reached: Please wait before playing audio again');
+      return;
+    }
+    
+    // Prevent multiple simultaneous audio playbacks
+    if (isPlaying) {
+      return;
+    }
+
+    try {
+      setIsPlaying(true);
+      setClickCount(prev => prev + 1);
       await speakFunction();
+    } catch (error) {
+      console.warn('Audio playback failed:', error);
+    } finally {
+      setIsPlaying(false);
     }
   };
 
@@ -136,9 +167,19 @@ export default function App() {
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative cursor-pointer"
+          className={`relative ${
+            clickCount >= 5 || isPlaying 
+              ? 'cursor-not-allowed opacity-75' 
+              : 'cursor-pointer'
+          }`}
           onClick={handleCentralClick}
-          title="Click to hear pronunciation"
+          title={
+            clickCount >= 5 
+              ? 'Rate limited - please wait 10 seconds'
+              : isPlaying 
+              ? 'Playing audio...'
+              : 'Click to hear pronunciation'
+          }
         >
           <ShaderCanvas
             size={canvasSize}

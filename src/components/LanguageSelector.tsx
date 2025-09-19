@@ -17,8 +17,7 @@ export const LanguageSelector = ({
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="fixed top-6 left-6 z-20">
-      <div className="relative">
+    <div className="relative">
         <motion.button
           onClick={() => setIsOpen(!isOpen)}
           className="flex items-center gap-3 px-4 py-3 bg-black/30 backdrop-blur-sm rounded-full border border-white/10 hover:bg-black/40 transition-colors"
@@ -79,7 +78,6 @@ export const LanguageSelector = ({
             </>
           )}
         </AnimatePresence>
-      </div>
     </div>
   );
 };

@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { trackLanguageChange, trackExtensionInstalled } from "../utils/analytics";
 // Allow TypeScript to compile in both web and extension contexts
 // without depending on @types/chrome in the app bundle
 declare const chrome: any;
@@ -9,6 +8,10 @@ export interface WordEntry {
   meaning: string;
   example: string;
   pronunciation?: string;
+  furigana?: string; // For Japanese hiragana reading
+  romanji?: string;  // For Japanese romanization
+  exampleFurigana?: string; // For Japanese example hiragana reading
+  exampleRomanji?: string;  // For Japanese example romanization
 }
 
 export interface Language {
@@ -89,7 +92,6 @@ export const useLanguageManager = () => {
     });
     
     // Track language change
-    trackLanguageChange(previousLanguage, language.name);
   };
 
   // Initialize from storage and load dictionaries
@@ -147,7 +149,6 @@ export const useLanguageManager = () => {
         
         // Track installation on first use (when no previous data exists)
         if (!data.selectedLanguage && !data.dailyWordDate) {
-          trackExtensionInstalled();
         }
       } catch (error) {
         console.error('Error initializing data:', error);

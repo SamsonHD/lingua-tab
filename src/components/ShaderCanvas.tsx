@@ -5,12 +5,14 @@ interface ShaderCanvasProps {
   size?: number;
   onClick?: () => void;
   shaderId?: number;
+  pauseAnimation?: boolean;
 }
 
 export const ShaderCanvas = ({ 
   size = 600, 
   onClick, 
-  shaderId = 1
+  shaderId = 1,
+  pauseAnimation = false
 }: ShaderCanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>(0);
@@ -75,8 +77,20 @@ export const ShaderCanvas = ({
     gl.viewport(0, 0, canvas.width, canvas.height);
 
     // Render function
+    let pausedTime = 0;
     const render = () => {
-      const currentTime = (Date.now() - startTime) / 1000;
+      let currentTime;
+      if (pauseAnimation) {
+        // When paused, use the time when pause started
+        if (pausedTime === 0) {
+          pausedTime = (Date.now() - startTime) / 1000;
+        }
+        currentTime = pausedTime;
+      } else {
+        // Reset pausedTime when not paused
+        pausedTime = 0;
+        currentTime = (Date.now() - startTime) / 1000;
+      }
       
       // Get the current mouse position from ref
       const mousePos = mousePositionRef.current;
@@ -103,7 +117,7 @@ export const ShaderCanvas = ({
       }
     };
     // mousePositionRef is no longer in the dependency array
-  }, [size, shaderId, selectedShader.fragmentShader]);
+  }, [size, shaderId, selectedShader.fragmentShader, pauseAnimation]);
 
   // Initialize shader program
   function initShaderProgram(gl: WebGLRenderingContext, vsSource: string, fsSource: string) {

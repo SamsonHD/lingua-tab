@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { motion } from "motion/react";
 import { shaders, vertexShader } from "./util/shaders";
 
@@ -17,10 +17,10 @@ export const ShaderPreviewButton = ({
   onMouseEnter, 
   onMouseLeave 
 }: ShaderPreviewButtonProps) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationRef = useRef<number>(0);
-  const mousePositionRef = useRef<[number, number]>([0.5, 0.5]); // Center for preview
-  const programInfoRef = useRef<any>(null);
+  const canvasRef = useRef(null);
+  const animationRef = useRef(0);
+  const mousePositionRef = useRef([0.5, 0.5]); // Center for preview
+  const programInfoRef = useRef(null);
   
   // Get shader details
   const shader = shaders.find(s => s.id === shaderId) || shaders[0];

@@ -6,7 +6,6 @@ import { WordDisplay } from "./components/WordDisplay";
 import { TimeGreeting } from "./components/TimeGreeting";
 import { useLanguageManager } from "./components/LanguageManager";
 import { motion } from "motion/react";
-import { trackPageView, trackDailyWordView, trackShaderChange, trackExtensionInstalled } from "./utils/analytics";
 
 // Chrome API type declaration
 declare const chrome: any;
@@ -22,10 +21,15 @@ export default function App() {
 
   const [canvasSize, setCanvasSize] = useState(600);
   const [selectedShader, setSelectedShader] = useState(1);
+  const [userSelectedShader, setUserSelectedShader] = useState(1); // Store user's actual shader choice
   const [speakFunction, setSpeakFunction] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [clickCount, setClickCount] = useState(0);
   const [lastResetTime, setLastResetTime] = useState(Date.now());
+  const [pauseAnimation, setPauseAnimation] = useState(false);
+  const [hideAnimation, setHideAnimation] = useState(false);
+  const [showFurigana, setShowFurigana] = useState(false);
+  const [isCircleHovered, setIsCircleHovered] = useState(false);
 
   // Set dark mode and update page title
   useEffect(() => {
@@ -33,9 +37,6 @@ export default function App() {
     if (dailyWord && selectedLanguage) {
       document.title = `${dailyWord.word} - LinguaTab`;
       
-      // Track page view and daily word view
-      trackPageView(document.title, document.location.href);
-      trackDailyWordView(selectedLanguage.name, dailyWord.word);
     }
   }, [dailyWord, selectedLanguage]);
 
@@ -56,15 +57,26 @@ export default function App() {
 
   // Handle shader selection
   const handleSelectShader = (id: number) => {
-    setSelectedShader(id);
+    setUserSelectedShader(id); // Store user's actual choice
+    setSelectedShader(id); // Always apply the selected shader
+    
+    // If hide animation is currently ON and user selects a shader, turn it OFF
+    if (hideAnimation) {
+      setHideAnimation(false);
+      // Update storage to reflect the change
+      if (typeof chrome !== 'undefined' && chrome.storage) {
+        chrome.storage.sync.set({ hideAnimation: false });
+      } else {
+        localStorage.setItem("hideAnimation", "false");
+      }
+    }
+    
     if (typeof chrome !== 'undefined' && chrome.storage) {
       chrome.storage.sync.set({ selectedShader: id });
     } else {
       localStorage.setItem("selectedShader", id.toString());
     }
     
-    // Track shader change
-    trackShaderChange(id);
   };
 
   // Handle central area click to play word with rate limiting
@@ -107,24 +119,77 @@ export default function App() {
     setSpeakFunction(() => speakFn);
   };
 
-  // Load shader preference from storage
+  // Load preferences from storage
   useEffect(() => {
-    const loadShaderPreference = async () => {
+    const loadPreferences = async () => {
       if (typeof chrome !== 'undefined' && chrome.storage) {
-        chrome.storage.sync.get(['selectedShader'], (result) => {
+        chrome.storage.sync.get(['selectedShader', 'pauseAnimation', 'hideAnimation', 'showFurigana'], (result) => {
           if (result.selectedShader) {
+            setUserSelectedShader(result.selectedShader);
             setSelectedShader(result.selectedShader);
+          }
+          if (result.pauseAnimation !== undefined) {
+            setPauseAnimation(result.pauseAnimation);
+          }
+          if (result.hideAnimation !== undefined) {
+            setHideAnimation(result.hideAnimation);
+          }
+          if (result.showFurigana !== undefined) {
+            setShowFurigana(result.showFurigana);
           }
         });
       } else {
         const savedShader = localStorage.getItem("selectedShader");
         if (savedShader) {
-          setSelectedShader(parseInt(savedShader, 10));
+          const shaderValue = parseInt(savedShader, 10);
+          setUserSelectedShader(shaderValue);
+          setSelectedShader(shaderValue);
+        }
+        const savedPauseAnimation = localStorage.getItem("pauseAnimation");
+        if (savedPauseAnimation) {
+          setPauseAnimation(savedPauseAnimation === 'true');
+        }
+        const savedHideAnimation = localStorage.getItem("hideAnimation");
+        if (savedHideAnimation) {
+          setHideAnimation(savedHideAnimation === 'true');
         }
       }
     };
     
-    loadShaderPreference();
+    loadPreferences();
+  }, []);
+
+  // Handle hideAnimation shader switching
+  useEffect(() => {
+    if (hideAnimation) {
+      // Switch to accessibility shader (ID 5) when hiding animation
+      setSelectedShader(5);
+    } else {
+      // Restore user's selected shader when not hiding animation
+      setSelectedShader(userSelectedShader);
+    }
+  }, [hideAnimation, userSelectedShader]);
+
+  // Listen for storage changes from popup
+  useEffect(() => {
+    if (typeof chrome !== 'undefined' && chrome.storage) {
+      const handleStorageChange = (changes: any) => {
+        if (changes.pauseAnimation && changes.pauseAnimation.newValue !== undefined) {
+          setPauseAnimation(changes.pauseAnimation.newValue);
+        }
+        if (changes.hideAnimation && changes.hideAnimation.newValue !== undefined) {
+          setHideAnimation(changes.hideAnimation.newValue);
+        }
+        if (changes.showFurigana && changes.showFurigana.newValue !== undefined) {
+          setShowFurigana(changes.showFurigana.newValue);
+        }
+      };
+
+      chrome.storage.onChanged.addListener(handleStorageChange);
+      return () => {
+        chrome.storage.onChanged.removeListener(handleStorageChange);
+      };
+    }
   }, []);
 
   // Show loading state
@@ -147,12 +212,48 @@ export default function App() {
       {/* Time Greeting - Top Right */}
       <TimeGreeting />
 
-      {/* Language Selector - Top Left */}
-      <LanguageSelector
-        languages={languages}
-        selectedLanguage={selectedLanguage}
-        onLanguageChange={changeLanguage}
-      />
+      {/* Language Selector and Settings - Top Left */}
+      <div className="fixed top-6 left-6 z-20 flex items-center gap-3">
+        {/* Settings Button */}
+        <motion.button
+          onClick={() => {
+            if (typeof chrome !== 'undefined' && chrome.action) {
+              chrome.action.openPopup();
+            }
+          }}
+          className="flex items-center justify-center px-4 py-3 bg-black/30 backdrop-blur-sm rounded-full border border-white/10 hover:bg-black/40 transition-colors"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          title="Open Settings"
+        >
+          <svg
+            className="w-5 h-5 text-white"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+            />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+            />
+          </svg>
+        </motion.button>
+        
+        <LanguageSelector
+          languages={languages}
+          selectedLanguage={selectedLanguage}
+          onLanguageChange={changeLanguage}
+        />
+      </div>
 
       {/* Shader Selector - Right Side */}
       <ShaderSelector
@@ -173,6 +274,8 @@ export default function App() {
               : 'cursor-pointer'
           }`}
           onClick={handleCentralClick}
+          onMouseEnter={() => setIsCircleHovered(true)}
+          onMouseLeave={() => setIsCircleHovered(false)}
           title={
             clickCount >= 5 
               ? 'Rate limited - please wait 10 seconds'
@@ -184,6 +287,7 @@ export default function App() {
           <ShaderCanvas
             size={canvasSize}
             shaderId={selectedShader}
+            pauseAnimation={pauseAnimation}
           />
 
           {/* Daily Word Display in the center */}
@@ -193,6 +297,8 @@ export default function App() {
             selectedLanguage={selectedLanguage.name}
             isDailyWord={true}
             onWordClick={handleWordClick}
+            showFurigana={showFurigana}
+            isCircleHovered={isCircleHovered}
           />
         </motion.div>
 

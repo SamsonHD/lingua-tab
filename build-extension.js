@@ -69,243 +69,23 @@ const writtenContent = readFileSync('dist/index.html', 'utf8');
 console.log('📝 Verification - index.html content:');
 console.log(writtenContent);
 
-// Create popup.html for Chrome extension
-console.log('Creating popup.html for Chrome extension...');
-const popupHtml = `<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <style>
-        body {
-            width: 320px;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(145deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%);
-            color: #ffffff;
-            margin: 0;
-            border-radius: 16px;
-            overflow: hidden;
-        }
-        
-        .container {
-            padding: 24px;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            position: relative;
-        }
-        
-        .container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.005) 100%);
-            pointer-events: none;
-        }
-        
-        h2 {
-            margin: 0 0 24px 0;
-            font-size: 24px;
-            font-weight: 700;
-            text-align: center;
-            background: linear-gradient(135deg, #ffffff 0%, #e5e5e5 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        
-        .title-icon {
-            width: 28px;
-            height: 28px;
-            filter: brightness(1.2) contrast(1.2);
-        }
-        
-        .setting {
-            margin-bottom: 20px;
-        }
-        
-        .setting:last-of-type {
-            margin-bottom: 16px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            font-size: 14px;
-            color: #e5e5e5;
-        }
-        
-        select {
-            width: 100%;
-            padding: 12px 16px;
-            border: none;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.06);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            font-size: 14px;
-            color: #ffffff;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        select:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-        
-        select:focus {
-            outline: none;
-            background: rgba(255, 255, 255, 0.12);
-            border-color: rgba(255, 255, 255, 0.25);
-            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.08);
-        }
-        
-        option {
-            background: #2d2d2d;
-            color: #ffffff;
-            padding: 8px;
-        }
-        
-        .switch-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-top: 8px;
-            padding: 12px 16px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            transition: all 0.3s ease;
-        }
-        
-        .switch-label {
-            margin: 0;
-            font-size: 14px;
-            font-weight: 500;
-            color: #f0f0f0;
-            user-select: none;
-            flex: 1;
-        }
-        
-        /* Hide default checkbox */
-        .switch-input {
-            display: none;
-        }
-        
-        /* Custom toggle switch */
-        .switch {
-            position: relative;
-            width: 44px;
-            height: 24px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .switch:hover {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-        
-        .switch::before {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 18px;
-            height: 18px;
-            background: linear-gradient(145deg, #ffffff 0%, #e5e5e5 100%);
-            border-radius: 50%;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        
-        .switch-input:checked + .switch {
-            background: rgba(255, 255, 255, 0.3);
-            border-color: rgba(255, 255, 255, 0.4);
-        }
-        
-        .switch-input:checked + .switch::before {
-            transform: translateX(20px);
-            background: linear-gradient(145deg, #ffffff 0%, #f8f8f8 100%);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-        }
-        
-        .info {
-            text-align: center;
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.6);
-            margin-top: 20px;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h2>
-            <img src="./icons/icon-128.png" alt="Lingua Tab" class="title-icon">
-            <span>Lingua Tab</span>
-        </h2>
-        
-        <div class="setting">
-            <label for="language">Choose your language:</label>
-            <select id="language">
-                <option value="pt">🇵🇹 Portuguese</option>
-                <option value="uk">🇺🇦 Ukrainian</option>
-                <option value="es">🇪🇸 Spanish</option>
-                <option value="fr">🇫🇷 French</option>
-                <option value="de">🇩🇪 German</option>
-                <option value="it">🇮🇹 Italian</option>
-                <option value="ja">🇯🇵 Japanese</option>
-            </select>
-        </div>
-        
-        <div class="setting">
-            <label>Animation Settings:</label>
-            <div class="switch-container">
-                <label for="pauseAnimation" class="switch-label">⏸️ Pause animation</label>
-                <input type="checkbox" id="pauseAnimation" class="switch-input">
-                <div class="switch"></div>
-            </div>
-            <div class="switch-container">
-                <label for="hideAnimation" class="switch-label">🚫 Hide animation</label>
-                <input type="checkbox" id="hideAnimation" class="switch-input">
-                <div class="switch"></div>
-            </div>
-        </div>
-        
-        <div class="setting">
-            <label>Japanese Settings:</label>
-            <div class="switch-container">
-                <label for="showFurigana" class="switch-label">🔤 Show furigana (ひらがな)</label>
-                <input type="checkbox" id="showFurigana" class="switch-input">
-                <div class="switch"></div>
-            </div>
-        </div>
-        
-        <div class="info">
-            Open a new tab to see your daily word!
-        </div>
-    </div>
-    <script src="./popup.js"></script>
-</body>
-</html>`;
-
-writeFileSync('dist/popup.html', popupHtml);
+// Copy popup.html for Chrome extension (using current design system version)
+console.log('Copying popup.html with design system...');
+if (existsSync('popup.html')) {
+  copyFileSync('popup.html', 'dist/popup.html');
+  console.log('✅ popup.html copied successfully');
+  
+  // Verify design system classes are present
+  const popupContent = readFileSync('popup.html', 'utf8');
+  const hasDesignSystem = popupContent.includes('design-select') || popupContent.includes('switch-container');
+  if (hasDesignSystem) {
+    console.log('✅ Design system classes detected in popup.html');
+  } else {
+    console.log('⚠️ Design system classes not found in popup.html');
+  }
+} else {
+  console.log('❌ popup.html not found in project root');
+}
 
 // Copy manifest.json to dist
 console.log('Copying manifest.json...');
@@ -332,6 +112,16 @@ if (existsSync(dictSrc)) {
   console.log(`✅ Copied ${glob.sync(`${dictSrc}/*.json`).length} dictionary files`);
 } else {
   console.log('ℹ️ No dictionaries directory found. Skipping.');
+}
+
+// Copy design system components (if needed for extension)
+console.log('Checking for design system components...');
+const uiSrc = 'src/components/ui';
+if (existsSync(uiSrc)) {
+  console.log('ℹ️ Design system components found in src/components/ui');
+  console.log('ℹ️ Note: UI components are bundled into main.js during build process');
+} else {
+  console.log('ℹ️ No UI components directory found. Skipping.');
 }
 
 // Copy icons

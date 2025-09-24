@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
+import { useResponsiveFont } from "../utils/responsiveFonts";
 
 export const TimeGreeting = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [greeting, setGreeting] = useState("");
+  
+  // Responsive font sizes
+  const greetingFontSize = useResponsiveFont({ base: 1.25, scale: 0.9, minScale: 0.5, maxScale: 1.1 });
+  const clockFontSize = useResponsiveFont({ base: 3.75, scale: 0.8, minScale: 0.3, maxScale: 1.0 });
+  const dateFontSize = useResponsiveFont({ base: 1, scale: 0.95, minScale: 0.7, maxScale: 1.0 });
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -56,16 +62,17 @@ export const TimeGreeting = () => {
           className="mb-1"
           style={{ 
             fontFamily: "var(--font-heading)",
-            fontSize: "1.25rem",
+            fontSize: `${greetingFontSize}rem`,
             fontWeight: "500"
           }}
         >
           {greeting}
         </div>
         <div 
-          className="text-6xl mb-2"
+          className="mb-2"
           style={{ 
             fontFamily: "var(--font-heading)",
+            fontSize: `${clockFontSize}rem`,
             fontWeight: "600"
           }}
         >
@@ -73,7 +80,9 @@ export const TimeGreeting = () => {
         </div>
         <div 
           className="text-white/70"
-          style={{ fontSize: "var(--text-md)" }}
+          style={{ 
+            fontSize: `${dateFontSize}rem`
+          }}
         >
           {formatDate(currentTime)}
         </div>

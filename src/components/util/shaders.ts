@@ -19,8 +19,12 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
   float dist = distance(fragCoord, center);
   float radius = min(iResolution.x, iResolution.y) * 0.5;
   
-  // Create a dimming factor for the center area (30% of the radius)
-  float centerDim = disableCenterDimming ? 1.0 : smoothstep(radius * 0.3, radius * 0.5, dist);
+  // Responsive dimming radius based on screen size - MAXIMUM COVERAGE
+  float dimmingRadius = radius * (iResolution.x < 640.0 ? 0.85 : 0.8); // Maximum dimming area to cover word display
+  float dimmingStart = radius * (iResolution.x < 640.0 ? 0.05 : 0.1); // Start dimming very early
+  
+  // Create a dimming factor for the center area with responsive radius
+  float centerDim = disableCenterDimming ? 1.0 : smoothstep(dimmingStart, dimmingRadius, dist);
 
   for(float i = 1.0; i < 10.0; i++){
     uv.x += 0.6 / i * cos(i * 2.5 * uv.y + iTime * 0.3);
@@ -39,9 +43,9 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
     fragColor = vec4(vec3(0.1) / abs(sin(iTime * 0.3 - uv.y - uv.x)), 1.0);
   }
   
-  // Apply center dimming only if not disabled
+  // Apply center dimming only if not disabled (ultra dark for text readability)
   if (!disableCenterDimming) {
-    fragColor.rgb = mix(fragColor.rgb * 0.3, fragColor.rgb, centerDim);
+    fragColor.rgb = mix(fragColor.rgb * 0.05, fragColor.rgb, centerDim);
   }
 }
 
@@ -141,14 +145,18 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
     float dist = distance(fragCoord, center);
     float radius = min(iResolution.x, iResolution.y) * 0.5;
     
-    // Create a dimming factor for the center area (30% of the radius)
-    float centerDim = disableCenterDimming ? 1.0 : smoothstep(radius * 0.3, radius * 0.5, dist);
+    // Responsive dimming radius based on screen size - MAXIMUM COVERAGE
+    float dimmingRadius = radius * (iResolution.x < 640.0 ? 0.85 : 0.8); // Maximum dimming area to cover word display
+    float dimmingStart = radius * (iResolution.x < 640.0 ? 0.05 : 0.1); // Start dimming very early
+    
+    // Create a dimming factor for the center area with responsive radius
+    float centerDim = disableCenterDimming ? 1.0 : smoothstep(dimmingStart, dimmingRadius, dist);
     
     fragColor = vec4(cl, 1.0);
     
-    // Apply center dimming only if not disabled
+    // Apply center dimming only if not disabled (ultra dark for text readability)
     if (!disableCenterDimming) {
-        fragColor.rgb = mix(fragColor.rgb * 0.3, fragColor.rgb, centerDim);
+        fragColor.rgb = mix(fragColor.rgb * 0.05, fragColor.rgb, centerDim);
     }
 }
 
@@ -193,8 +201,12 @@ void mainImage(out vec4 O, in vec2 fragCoord) {
   float dist = distance(fragCoord, center);
   float radius = min(iResolution.x, iResolution.y) * 0.5;
   
-  // Create a dimming factor for the center area (30% of the radius)
-  float centerDim = disableCenterDimming ? 1.0 : smoothstep(radius * 0.3, radius * 0.5, dist);
+  // Responsive dimming radius based on screen size - MAXIMUM COVERAGE
+  float dimmingRadius = radius * (iResolution.x < 640.0 ? 0.85 : 0.8); // Maximum dimming area to cover word display
+  float dimmingStart = radius * (iResolution.x < 640.0 ? 0.05 : 0.1); // Start dimming very early
+  
+  // Create a dimming factor for the center area with responsive radius
+  float centerDim = disableCenterDimming ? 1.0 : smoothstep(dimmingStart, dimmingRadius, dist);
   
   // Using a proper GLSL loop structure
   for(int i = 0; i < 20; i++) {
@@ -235,9 +247,9 @@ void mainImage(out vec4 O, in vec2 fragCoord) {
     O.rgb = mix(O.rgb, vec3(0.2, 1.0, 0.4), 0.3);
   }
   
-  // Apply center dimming only if not disabled
+  // Apply center dimming only if not disabled (stronger dimming)
   if (!disableCenterDimming) {
-    O.rgb = mix(O.rgb * 0.3, O.rgb, centerDim);
+    O.rgb = mix(O.rgb * 0.2, O.rgb, centerDim);
   }
 }
 
@@ -379,12 +391,16 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
     float dist = distance(fragCoord, center);
     float radius = min(iResolution.x, iResolution.y) * 0.5;
     
-    // Create a dimming factor for the center area (30% of the radius)
-    float centerDim = disableCenterDimming ? 1.0 : smoothstep(radius * 0.3, radius * 0.5, dist);
+    // Responsive dimming radius based on screen size - MAXIMUM COVERAGE
+    float dimmingRadius = radius * (iResolution.x < 640.0 ? 0.85 : 0.8); // Maximum dimming area to cover word display
+    float dimmingStart = radius * (iResolution.x < 640.0 ? 0.05 : 0.1); // Start dimming very early
     
-    // Apply center dimming only if not disabled
+    // Create a dimming factor for the center area with responsive radius
+    float centerDim = disableCenterDimming ? 1.0 : smoothstep(dimmingStart, dimmingRadius, dist);
+    
+    // Apply center dimming only if not disabled (ultra dark for text readability)
     if (!disableCenterDimming) {
-        fragColor.rgb = mix(fragColor.rgb * 0.3, fragColor.rgb, centerDim);
+        fragColor.rgb = mix(fragColor.rgb * 0.05, fragColor.rgb, centerDim);
     }
 }
 

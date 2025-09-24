@@ -7,7 +7,7 @@
             width: 320px;
             padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(145deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%);
+            background: linear-gradient(145deg, #000000 0%, #0a0a0a 50%, #000000 100%);
             color: #ffffff;
             margin: 0;
             border-radius: 16px;
@@ -15,11 +15,12 @@
         }
         
         .container {
-            padding: 24px;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             position: relative;
+            min-height: calc(100vh - 40px);
         }
         
         .container::before {
@@ -34,8 +35,8 @@
         }
         
         h2 {
-            margin: 0 0 24px 0;
-            font-size: 24px;
+            margin: 0 0 20px 0;
+            font-size: 22px;
             font-weight: 700;
             text-align: center;
             background: linear-gradient(135deg, #ffffff 0%, #e5e5e5 100%);
@@ -46,6 +47,7 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            padding: 0 0 4px 0;
         }
         
         .title-icon {
@@ -55,63 +57,248 @@
         }
         
         .setting {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
         
         .setting:last-of-type {
             margin-bottom: 16px;
         }
         
-        label {
+        .setting-label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             font-weight: 500;
             font-size: 14px;
             color: #e5e5e5;
+            padding: 0 2px;
         }
         
-        select {
+        /* Design System Dropdown Styling - Based on our React Dropdown component */
+        .design-dropdown {
+            position: relative;
+            width: 100%;
+        }
+        
+        .design-dropdown-button {
             width: 100%;
             padding: 12px 16px;
-            border: none;
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 12px;
-            background: rgba(255, 255, 255, 0.06);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            font-size: 14px;
+            background: rgba(255, 255, 255, 0.1);
             color: #ffffff;
+            font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-align: left;
+            min-width: 200px;
+            box-sizing: border-box;
+            overflow: hidden;
         }
         
-        select:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.2);
+        .design-dropdown-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.02);
         }
         
-        select:focus {
+        .design-dropdown-button:focus {
             outline: none;
             background: rgba(255, 255, 255, 0.12);
-            border-color: rgba(255, 255, 255, 0.25);
-            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+            transform: scale(1.02);
         }
         
-        option {
-            background: #2d2d2d;
+        .design-dropdown-button:active {
+            transform: scale(0.98);
+        }
+        
+        .design-dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            z-index: 20;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            margin-top: 4px;
+            max-height: 200px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
+        
+        .design-dropdown-content.show {
+            display: block;
+            background: rgba(0, 0, 0, 0.98);
+            animation: designDropdownFadeIn 0.2s ease-out;
+            overflow: hidden;
+        }
+        
+        .design-dropdown-content::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .design-dropdown-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .design-dropdown-content::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+        }
+        
+        .design-dropdown-content::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .design-dropdown-options-container {
+            max-height: 180px;
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding: 4px 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        .design-dropdown-options-container::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .design-dropdown-options-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .design-dropdown-options-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+        }
+        
+        .design-dropdown-options-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        @keyframes designDropdownFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .design-dropdown-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            color: rgba(255, 255, 255, 0.9);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border: none;
+            outline: none;
+            width: 100%;
+            text-align: left;
+            background: transparent;
+            box-sizing: border-box;
+            min-width: 0;
+        }
+        
+        .design-dropdown-option:hover {
+            background: rgba(255, 255, 255, 0.12);
             color: #ffffff;
-            padding: 8px;
         }
         
+        .design-dropdown-option.selected {
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+        }
+        
+        .design-dropdown-option.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .design-dropdown-option.disabled:hover {
+            background: transparent;
+            transform: none;
+        }
+        
+        .design-dropdown-option .icon {
+            font-size: 16px;
+            flex-shrink: 0;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .design-dropdown-option .label {
+            flex: 1;
+            font-weight: 500;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .design-dropdown-chevron {
+            transition: transform 0.2s ease;
+            flex-shrink: 0;
+            width: 16px;
+            height: 16px;
+        }
+        
+        .design-dropdown-chevron.rotated {
+            transform: rotate(180deg);
+        }
+        
+        .design-dropdown-selected {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .design-dropdown-selected .icon {
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
+        .design-dropdown-selected .label {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        /* Design System Switch Styling */
         .switch-container {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-top: 8px;
-            padding: 12px 16px;
+            margin-bottom: 8px;
+            padding: 14px 16px;
             border-radius: 12px;
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
+        }
+        
+        .switch-container:last-child {
+            margin-bottom: 0;
+        }
+        
+        .switch-container:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: scale(1.02);
         }
         
         .switch-label {
@@ -121,6 +308,13 @@
             color: #f0f0f0;
             user-select: none;
             flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .switch-label .icon {
+            font-size: 16px;
         }
         
         /* Hide default checkbox */
@@ -128,7 +322,7 @@
             display: none;
         }
         
-        /* Custom toggle switch */
+        /* Design System Toggle Switch */
         .switch {
             position: relative;
             width: 44px;
@@ -136,7 +330,7 @@
             background: rgba(255, 255, 255, 0.15);
             border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
         }
         
@@ -169,15 +363,62 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
         
+        .switch:active {
+            transform: scale(0.98);
+        }
+        
         .info {
             text-align: center;
             font-size: 12px;
             color: rgba(255, 255, 255, 0.6);
-            margin-top: 20px;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            margin-top: 18px;
+            padding: 14px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+        }
+        
+        .section-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 14px;
+            padding: 0 2px;
+        }
+        
+        .credits {
+            margin-top: 16px;
+            padding: 14px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+        }
+        
+        .credits-title {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .credits-content {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.5);
+            line-height: 1.4;
+            text-align: left;
+        }
+        
+        .credits-content a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        
+        .credits-content a:hover {
+            color: rgba(255, 255, 255, 0.9);
         }
     </style>
 </head>
@@ -189,36 +430,74 @@
         </h2>
         
         <div class="setting">
-            <label for="language">Choose your language:</label>
-            <select id="language">
-                <option value="pt">🇵🇹 Portuguese</option>
-                <option value="uk">🇺🇦 Ukrainian</option>
-                <option value="es">🇪🇸 Spanish</option>
-                <option value="fr">🇫🇷 French</option>
-                <option value="de">🇩🇪 German</option>
-                <option value="it">🇮🇹 Italian</option>
-                <option value="ja">🇯🇵 Japanese</option>
-            </select>
+            <label for="language" class="setting-label">Choose your language:</label>
+            <div class="design-dropdown" id="languageDropdown">
+                <button class="design-dropdown-button" type="button" role="combobox" aria-expanded="false" aria-haspopup="listbox">
+                    <div class="design-dropdown-selected">
+                        <span class="icon" id="selectedFlag">🇵🇹</span>
+                        <span class="label" id="selectedLanguage">Portuguese</span>
+                    </div>
+                    <svg class="design-dropdown-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6,9 12,15 18,9"></polyline>
+                    </svg>
+                </button>
+                <div class="design-dropdown-content" role="listbox" aria-label="Language options">
+                    <div class="design-dropdown-options-container">
+                        <div class="design-dropdown-option" role="option" data-value="pt" data-icon="🇵🇹" data-label="Portuguese">
+                            <span class="icon">🇵🇹</span>
+                            <span class="label">Portuguese</span>
+                        </div>
+                        <div class="design-dropdown-option" role="option" data-value="uk" data-icon="🇺🇦" data-label="Ukrainian">
+                            <span class="icon">🇺🇦</span>
+                            <span class="label">Ukrainian</span>
+                        </div>
+                        <div class="design-dropdown-option" role="option" data-value="es" data-icon="🇪🇸" data-label="Spanish">
+                            <span class="icon">🇪🇸</span>
+                            <span class="label">Spanish</span>
+                        </div>
+                        <div class="design-dropdown-option" role="option" data-value="de" data-icon="🇩🇪" data-label="German">
+                            <span class="icon">🇩🇪</span>
+                            <span class="label">German</span>
+                        </div>
+                        <div class="design-dropdown-option" role="option" data-value="it" data-icon="🇮🇹" data-label="Italian">
+                            <span class="icon">🇮🇹</span>
+                            <span class="label">Italian</span>
+                        </div>
+                        <div class="design-dropdown-option" role="option" data-value="ja" data-icon="🇯🇵" data-label="Japanese">
+                            <span class="icon">🇯🇵</span>
+                            <span class="label">Japanese</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <div class="setting">
-            <label>Animation Settings:</label>
+            <div class="section-title">Animation Settings:</div>
             <div class="switch-container">
-                <label for="pauseAnimation" class="switch-label">⏸️ Pause animation</label>
+                <label for="pauseAnimation" class="switch-label">
+                    <span class="icon">⏸️</span>
+                    Pause animation
+                </label>
                 <input type="checkbox" id="pauseAnimation" class="switch-input">
                 <div class="switch"></div>
             </div>
             <div class="switch-container">
-                <label for="hideAnimation" class="switch-label">🚫 Hide animation</label>
+                <label for="hideAnimation" class="switch-label">
+                    <span class="icon">🚫</span>
+                    Hide animation
+                </label>
                 <input type="checkbox" id="hideAnimation" class="switch-input">
                 <div class="switch"></div>
             </div>
         </div>
         
         <div class="setting">
-            <label>Japanese Settings:</label>
+            <div class="section-title">Japanese Settings:</div>
             <div class="switch-container">
-                <label for="showFurigana" class="switch-label">🔤 Show furigana (ひらがな)</label>
+                <label for="showFurigana" class="switch-label">
+                    Show furigana (ひらがな)
+                </label>
                 <input type="checkbox" id="showFurigana" class="switch-input">
                 <div class="switch"></div>
             </div>
@@ -226,6 +505,20 @@
         
         <div class="info">
             Open a new tab to see your daily word!
+        </div>
+        
+        <div class="credits">
+            <div class="credits-title">Credits & Attribution</div>
+            <div class="credits-content">
+                <strong>Shader Effects:</strong><br>
+                • "Ether" by nimitz - <a href="https://www.shadertoy.com/view/MsjSW3" target="_blank">Shadertoy</a><br>
+                • Licensed under CC BY-NC-SA 3.0<br>
+                • <a href="https://www.figma.com/community/file/1530578704157510341" target="_blank">Figma Make Project</a><br>
+                • Licensed under CC BY 4.0<br><br>
+                
+                Made with ❤️ for daily language learning<br>
+                <strong>Version 1.0.6</strong>
+            </div>
         </div>
     </div>
     

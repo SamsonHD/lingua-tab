@@ -1,7 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import { WordEntry } from "./LanguageManager";
 import { speakWord } from "../utils/tts";
+import { useResponsiveFont, createResponsiveFontStyle } from "../utils/responsiveFonts";
+import { saveWord, removeWord, isWordSaved, SavedWordItem } from "../utils/savedWords";
 
 // Chrome API type declaration
 declare const chrome: any;
@@ -10,6 +12,7 @@ interface WordDisplayProps {
   word: WordEntry;
   size: number;
   selectedLanguage: string;
+  selectedLanguageCode: string;
   isDailyWord?: boolean;
   onWordClick?: (speakFunction: () => Promise<void>) => void;
   showFurigana?: boolean;
@@ -20,6 +23,7 @@ export const WordDisplay = ({
   word,
   size,
   selectedLanguage,
+  selectedLanguageCode,
   isDailyWord = false,
   onWordClick,
   showFurigana = false,
@@ -27,10 +31,55 @@ export const WordDisplay = ({
 }: WordDisplayProps) => {
   const containerSize = size * 0.6; // 60% of canvas size
   const maxWordLength = 60;
+  const [isSaved, setIsSaved] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  
+  // Responsive font sizes
+  const wordFontSize = useResponsiveFont({ base: 3, scale: 0.85, minScale: 0.4, maxScale: 1.2 });
+  const meaningFontSize = useResponsiveFont({ base: 1.1, scale: 0.9, minScale: 0.6, maxScale: 1.0 });
+  const exampleFontSize = useResponsiveFont({ base: 1.15, scale: 0.9, minScale: 0.6, maxScale: 1.0 });
 
   const truncateText = (text: string, maxLength: number) => {
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + "...";
+  };
+
+  // Check if word is saved on mount and when word/language changes
+  useEffect(() => {
+    const checkSavedStatus = async () => {
+      const saved = await isWordSaved(word.word, selectedLanguageCode);
+      setIsSaved(saved);
+    };
+    checkSavedStatus();
+  }, [word.word, selectedLanguageCode]);
+
+  // Handle star button click
+  const handleStarClick = async (e: any) => {
+    e.stopPropagation(); // Prevent background click
+    
+    if (isSaving) return;
+    
+    setIsSaving(true);
+    
+    try {
+      if (isSaved) {
+        // Remove from saved
+        const success = await removeWord(word.word, selectedLanguageCode);
+        if (success) {
+          setIsSaved(false);
+        }
+      } else {
+        // Add to saved
+        const success = await saveWord(word, selectedLanguageCode, selectedLanguage);
+        if (success) {
+          setIsSaved(true);
+        }
+      }
+    } catch (error) {
+      console.error('Error toggling saved status:', error);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   // Get display text for the word based on language and furigana setting
@@ -123,20 +172,55 @@ export const WordDisplay = ({
           </motion.div>
         )}
 
-        {/* Main Word */}
-        <motion.h1
+        {/* Main Word with Star Button */}
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="text-white mb-6 break-words text-center"
-          style={{
-            fontSize: getDisplayWord().length > 15 ? "2.5rem" : "3rem",
-            lineHeight: 1.2,
-            fontFamily: "var(--font-heading)",
-          }}
+          className="flex items-center justify-center gap-3 mb-4"
         >
-          {truncateText(getDisplayWord(), 20)}
-        </motion.h1>
+          <h1
+            className="text-white break-words text-center"
+            style={{
+              fontSize: `${wordFontSize}rem`,
+              lineHeight: 1.2,
+              fontFamily: "var(--font-heading)",
+            }}
+          >
+            {truncateText(getDisplayWord(), 20)}
+          </h1>
+          
+          {/* Star Button - Next to Word */}
+          <motion.button
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.4 }}
+            onClick={handleStarClick}
+            disabled={isSaving}
+            className={`w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-sm border transition-all duration-200 pointer-events-auto focus:outline-none ${
+              isSaved 
+                ? 'bg-yellow-500/20 border-yellow-400/40 hover:bg-yellow-500/30' 
+                : 'bg-white/10 border-white/20 hover:bg-white/20'
+            } ${isSaving ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+            title={isSaved ? 'Remove from saved words' : 'Save this word'}
+          >
+            <motion.svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill={isSaved ? "currentColor" : "none"}
+              stroke="currentColor"
+              strokeWidth={isSaved ? 0 : 2}
+              className={`transition-colors ${
+                isSaved ? 'text-yellow-400' : 'text-white/70'
+              }`}
+              animate={isSaving ? { rotate: 360 } : {}}
+              transition={isSaving ? { duration: 1, repeat: Infinity, ease: "linear" } : {}}
+            >
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+            </motion.svg>
+          </motion.button>
+        </motion.div>
 
         {/* Japanese Furigana Toggle - Only for Japanese */}
         {selectedLanguage === 'Japanese' && word.furigana && word.romanji && (
@@ -144,7 +228,7 @@ export const WordDisplay = ({
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15 }}
-            className="mb-6 flex items-center justify-center pointer-events-none"
+            className="mb-4 flex items-center justify-center pointer-events-none"
           >
             <button 
               className="flex items-center justify-center gap-4 px-6 py-2 bg-white/8 backdrop-blur-sm rounded-full hover:bg-gray-300/20 transition-all duration-300 pointer-events-auto focus:outline-none cursor-pointer"
@@ -198,9 +282,9 @@ export const WordDisplay = ({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="text-white/90 mb-6 break-words text-center"
+          className="text-white/90 mb-4 break-words text-center"
           style={{
-            fontSize: "1.1rem",
+            fontSize: `${meaningFontSize}rem`,
             lineHeight: 1.4,
             maxWidth: "90%",
           }}
@@ -215,7 +299,7 @@ export const WordDisplay = ({
           transition={{ delay: 0.3 }}
           className="text-white/75 italic text-center break-words"
           style={{
-            fontSize: "1.15rem",
+            fontSize: `${exampleFontSize}rem`,
             lineHeight: 1.4,
             maxWidth: "90%",
           }}

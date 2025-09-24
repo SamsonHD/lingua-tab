@@ -4,8 +4,10 @@ import { ShaderSelector } from "./components/ShaderSelector";
 import { LanguageSelector } from "./components/LanguageSelector";
 import { WordDisplay } from "./components/WordDisplay";
 import { TimeGreeting } from "./components/TimeGreeting";
+import { SavedWordsModal } from "./components/SavedWordsModal";
 import { useLanguageManager } from "./components/LanguageManager";
 import { motion } from "motion/react";
+import { useResponsiveFont } from "./utils/responsiveFonts";
 
 // Chrome API type declaration
 declare const chrome: any;
@@ -30,6 +32,13 @@ export default function App() {
   const [hideAnimation, setHideAnimation] = useState(false);
   const [showFurigana, setShowFurigana] = useState(false);
   const [isCircleHovered, setIsCircleHovered] = useState(false);
+  const [isSavedWordsModalOpen, setIsSavedWordsModalOpen] = useState(false);
+  
+  // Responsive font size for daily word info
+  const infoFontSize = useResponsiveFont({ base: 0.875, scale: 0.95, minScale: 0.6, maxScale: 1.0 });
+  
+  // Responsive font size for buttons (matching language selector)
+  const buttonFontSize = useResponsiveFont({ base: 1, scale: 0.95, minScale: 0.7, maxScale: 1.0 });
 
   // Set dark mode and update page title
   useEffect(() => {
@@ -40,10 +49,23 @@ export default function App() {
     }
   }, [dailyWord, selectedLanguage]);
 
-  // Adjust canvas size based on window size
+  // Adjust canvas size based on window size with responsive scaling
   useEffect(() => {
     const handleResize = () => {
-      const size = Math.min(window.innerWidth, window.innerHeight) * 0.8;
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      
+      // More aggressive scaling for smaller screens
+      let scaleFactor = 0.8;
+      if (viewportWidth <= 480) {
+        scaleFactor = 0.6; // Smaller on very small screens
+      } else if (viewportWidth <= 640) {
+        scaleFactor = 0.7; // Medium-small screens
+      } else if (viewportWidth <= 768) {
+        scaleFactor = 0.75; // Tablets
+      }
+      
+      const size = Math.min(viewportWidth, viewportHeight) * scaleFactor;
       setCanvasSize(size);
     };
 
@@ -192,6 +214,9 @@ export default function App() {
     }
   }, []);
 
+  // Responsive font size for loading text
+  const loadingFontSize = useResponsiveFont({ base: 1.25, scale: 0.9, minScale: 0.7, maxScale: 1.1 });
+
   // Show loading state
   if (isLoading) {
     return (
@@ -199,7 +224,8 @@ export default function App() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="text-white text-xl"
+          className="text-white"
+          style={{ fontSize: `${loadingFontSize}rem` }}
         >
           Loading your daily word...
         </motion.div>
@@ -253,6 +279,36 @@ export default function App() {
           selectedLanguage={selectedLanguage}
           onLanguageChange={changeLanguage}
         />
+
+        {/* Saved Words Button */}
+        <motion.button
+          onClick={() => setIsSavedWordsModalOpen(true)}
+          className="flex items-center gap-3 px-4 py-3 bg-black/30 backdrop-blur-sm rounded-full border border-white/10 hover:bg-black/40 transition-colors"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          title="View Saved Words"
+        >
+          <svg
+            className="w-5 h-5 text-white"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
+            />
+          </svg>
+          <span 
+            className="text-white font-medium"
+            style={{ fontSize: `${buttonFontSize}rem` }}
+          >
+            Saved Words
+          </span>
+        </motion.button>
       </div>
 
       {/* Shader Selector - Right Side */}
@@ -295,6 +351,7 @@ export default function App() {
             word={dailyWord}
             size={canvasSize}
             selectedLanguage={selectedLanguage.name}
+            selectedLanguageCode={selectedLanguage.code}
             isDailyWord={true}
             onWordClick={handleWordClick}
             showFurigana={showFurigana}
@@ -303,20 +360,14 @@ export default function App() {
         </motion.div>
 
         {/* Daily word info */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.2 }}
-          className="absolute bottom-[-80px] left-1/2 transform -translate-x-1/2 text-center"
-        >
-          <p className="text-white/40 text-sm">
-            Your daily word in {selectedLanguage.name}
-          </p>
-          <p className="text-white/30 text-xs mt-1">
-            A new word awaits you tomorrow!
-          </p>
-        </motion.div>
       </div>
+
+      {/* Saved Words Modal */}
+      <SavedWordsModal
+        isOpen={isSavedWordsModalOpen}
+        onClose={() => setIsSavedWordsModalOpen(false)}
+        languages={languages}
+      />
 
     </div>
   );

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ChevronDown } from "lucide-react";
 import { Language } from "./LanguageManager";
+import { useResponsiveFont } from "../utils/responsiveFonts";
 
 interface LanguageSelectorProps {
   languages: Language[];
@@ -15,6 +16,9 @@ export const LanguageSelector = ({
   onLanguageChange,
 }: LanguageSelectorProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  
+  // Responsive font size for language selector
+  const selectorFontSize = useResponsiveFont({ base: 1, scale: 0.95, minScale: 0.7, maxScale: 1.0 });
 
   return (
     <div className="relative">
@@ -25,7 +29,12 @@ export const LanguageSelector = ({
           whileTap={{ scale: 0.98 }}
         >
           <span className="text-2xl">{selectedLanguage.flag}</span>
-          <span className="text-white font-medium">{selectedLanguage.name}</span>
+          <span 
+            className="text-white font-medium"
+            style={{ fontSize: `${selectorFontSize}rem` }}
+          >
+            {selectedLanguage.name}
+          </span>
           <motion.div
             animate={{ rotate: isOpen ? 180 : 0 }}
             transition={{ duration: 0.2 }}
@@ -70,7 +79,12 @@ export const LanguageSelector = ({
                   >
                     <span className="text-xl">{language.flag}</span>
                     <div className="flex flex-col">
-                      <span className="font-medium">{language.name}</span>
+                      <span 
+                        className="font-medium"
+                        style={{ fontSize: `${selectorFontSize * 0.9}rem` }}
+                      >
+                        {language.name}
+                      </span>
                     </div>
                   </motion.button>
                 ))}

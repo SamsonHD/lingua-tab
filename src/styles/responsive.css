@@ -1,0 +1,198 @@
+/* Responsive Font Utilities */
+
+/* Responsive font size variables */
+:root {
+  /* Base font sizes for different components */
+  --font-word-display: 3rem;
+  --font-time-greeting: 1.25rem;
+  --font-clock-display: 3.75rem;
+  --font-meaning-text: 1.1rem;
+  --font-example-text: 1.15rem;
+  --font-ui-elements: 1rem;
+  --font-info-text: 0.875rem;
+  --font-loading-text: 1.25rem;
+}
+
+/* Responsive breakpoints */
+@media (max-width: 1536px) {
+  :root {
+    --font-word-display: 2.55rem;
+    --font-time-greeting: 1.125rem;
+    --font-clock-display: 3rem;
+    --font-meaning-text: 0.99rem;
+    --font-example-text: 1.035rem;
+    --font-ui-elements: 0.95rem;
+    --font-info-text: 0.831rem;
+    --font-loading-text: 1.125rem;
+  }
+}
+
+@media (max-width: 1280px) {
+  :root {
+    --font-word-display: 2.16rem;
+    --font-time-greeting: 1rem;
+    --font-clock-display: 2.4rem;
+    --font-meaning-text: 0.88rem;
+    --font-example-text: 0.92rem;
+    --font-ui-elements: 0.9rem;
+    --font-info-text: 0.788rem;
+    --font-loading-text: 1rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  :root {
+    --font-word-display: 1.8rem;
+    --font-time-greeting: 0.9rem;
+    --font-clock-display: 1.92rem;
+    --font-meaning-text: 0.77rem;
+    --font-example-text: 0.805rem;
+    --font-ui-elements: 0.855rem;
+    --font-info-text: 0.744rem;
+    --font-loading-text: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --font-word-display: 1.44rem;
+    --font-time-greeting: 0.81rem;
+    --font-clock-display: 1.536rem;
+    --font-meaning-text: 0.66rem;
+    --font-example-text: 0.69rem;
+    --font-ui-elements: 0.81rem;
+    --font-info-text: 0.7rem;
+    --font-loading-text: 0.81rem;
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --font-word-display: 1.08rem;
+    --font-time-greeting: 0.729rem;
+    --font-clock-display: 1.152rem;
+    --font-meaning-text: 0.594rem;
+    --font-example-text: 0.621rem;
+    --font-ui-elements: 0.769rem;
+    --font-info-text: 0.665rem;
+    --font-loading-text: 0.729rem;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --font-word-display: 0.918rem;
+    --font-time-greeting: 0.656rem;
+    --font-clock-display: 0.979rem;
+    --font-meaning-text: 0.54rem;
+    --font-example-text: 0.565rem;
+    --font-ui-elements: 0.73rem;
+    --font-info-text: 0.63rem;
+    --font-loading-text: 0.656rem;
+  }
+}
+
+/* Utility classes for responsive fonts */
+.text-responsive-word-display {
+  font-size: var(--font-word-display);
+}
+
+.text-responsive-time-greeting {
+  font-size: var(--font-time-greeting);
+}
+
+.text-responsive-clock-display {
+  font-size: var(--font-clock-display);
+}
+
+.text-responsive-meaning {
+  font-size: var(--font-meaning-text);
+}
+
+.text-responsive-example {
+  font-size: var(--font-example-text);
+}
+
+.text-responsive-ui {
+  font-size: var(--font-ui-elements);
+}
+
+.text-responsive-info {
+  font-size: var(--font-info-text);
+}
+
+.text-responsive-loading {
+  font-size: var(--font-loading-text);
+}
+
+/* Additional responsive utilities */
+@media (max-width: 480px) {
+  /* Reduce padding and margins on very small screens */
+  .responsive-padding {
+    padding: 0.5rem;
+  }
+  
+  .responsive-margin {
+    margin: 0.25rem;
+  }
+  
+  /* Adjust canvas size for very small screens */
+  .responsive-canvas {
+    width: 90vw !important;
+    height: 90vw !important;
+    max-width: 400px;
+    max-height: 400px;
+  }
+  
+  /* Stack elements vertically on small screens */
+  .responsive-stack {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  /* Adjust button sizes */
+  .responsive-button {
+    padding: 0.75rem 1rem;
+    font-size: var(--font-ui-elements);
+  }
+}
+
+@media (max-width: 640px) {
+  /* Medium-small screen adjustments */
+  .responsive-canvas {
+    width: 85vw !important;
+    height: 85vw !important;
+    max-width: 500px;
+    max-height: 500px;
+  }
+}
+
+/* Ensure text remains readable on all screen sizes */
+.text-responsive-word-display,
+.text-responsive-clock-display {
+  line-height: 1.1;
+  font-weight: 600;
+}
+
+.text-responsive-meaning,
+.text-responsive-example {
+  line-height: 1.4;
+}
+
+/* Smooth transitions for font size changes - specific to text elements only */
+p, span, div, h1, h2, h3, h4, h5, h6, label, button, input, .text-responsive-word-display, .text-responsive-clock-display, .text-responsive-meaning, .text-responsive-example, .text-responsive-ui, .text-responsive-info, .text-responsive-loading {
+  transition: font-size 0.2s ease-in-out;
+}
+
+/* Prevent text from being too small to read */
+@media (max-width: 320px) {
+  :root {
+    --font-word-display: 1.2rem;
+    --font-clock-display: 1.5rem;
+    --font-meaning-text: 0.8rem;
+    --font-example-text: 0.85rem;
+    --font-ui-elements: 0.9rem;
+    --font-info-text: 0.8rem;
+    --font-loading-text: 1rem;
+  }
+}
